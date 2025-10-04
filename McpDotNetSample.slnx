@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path="NuGet.config" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="McpDotNetSample.Asp/McpDotNetSample.Asp.csproj" />
+  <Project Path="McpDotNetSample.Tests/McpDotNetSample.Tests.csproj" />
+  <Project Path="McpDotNetSample/McpDotNetSample.csproj" />
+</Solution>

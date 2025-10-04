@@ -1,0 +1,47 @@
+name: Copilot Setup Steps
+
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+  pull_request:
+    paths:
+      - .github/workflows/copilot-setup-steps.yml
+
+defaults:
+  run:
+    shell: pwsh
+
+env:
+  DOTNET_VERSION: 9.x
+
+jobs:
+  copilot-setup-steps:
+    name: copilot-setup-steps
+    runs-on: ubuntu-latest
+
+    permissions:
+      # If you want to clone the repository as part of your setup steps, for example to install dependencies, you'll need the `contents: read` permission.
+      contents: read
+    steps:
+    - uses: actions/checkout@v5
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v5
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    - name: Setup Dependency Caching
+      uses: actions/cache@v4
+      id: nuget-cache
+      with:
+        path: |
+          ~/.nuget/packages
+          ${{ github.workspace }}/**/obj/project.assets.json
+        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          ${{ runner.os }}-nuget-
+
+    - name: Restore dependencies
+      run: dotnet restore
