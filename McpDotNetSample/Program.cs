@@ -19,11 +19,11 @@ builder.Services
 await builder.Build().RunAsync();
 
 [McpServerToolType]
-public static class EchoTool
+public class AddTool
 {
-    [McpServerTool, Description("Echoes the message back to the client.")]
-    public static string Echo(string message)
+    [McpServerTool(Name = "add"), Description("Adds two numbers.")]
+    public static string Add(int a, int b)
     {
-        return $"hello {message}";
+        return $"The sum of {a} and {b} is {a + b}";
     }
 }
