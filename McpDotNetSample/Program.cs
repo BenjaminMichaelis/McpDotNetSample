@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -25,28 +25,5 @@ public static class EchoTool
     public static string Echo(string message)
     {
         return $"hello {message}";
-    }
-}
-
-[McpServerToolType]
-public static class SnippetTool
-{
-    private const string BlobPath = "snippets/{mcptoolargs." + "snippetname" + "}.json";
-
-    [McpServerTool, Description("Retrieves a snippet from storage.")]
-    public object GetSnippet(
-        string snippetContent
-    )
-    {
-        return snippetContent;
-    }
-
-    [McpServerTool, Description("Saves a snippet to storage.")]
-    public string SaveSnippet(
-            string name,
-            string snippet
-    )
-    {
-        return snippet;
     }
 }
