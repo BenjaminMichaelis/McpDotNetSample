@@ -17,5 +17,8 @@ app.Run("http://localhost:3001");
 public static class EchoTool
 {
     [McpServerTool, Description("Echoes the message back to the client.")]
-    public static string Echo(string message) => $"hello {message}";
+    public static string Echo(string message)
+    {
+        return $"hello {message}";
+    }
 }

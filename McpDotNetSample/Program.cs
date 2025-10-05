@@ -22,5 +22,31 @@ await builder.Build().RunAsync();
 public static class EchoTool
 {
     [McpServerTool, Description("Echoes the message back to the client.")]
-    public static string Echo(string message) => $"hello {message}";
+    public static string Echo(string message)
+    {
+        return $"hello {message}";
+    }
+}
+
+[McpServerToolType]
+public static class SnippetTool
+{
+    private const string BlobPath = "snippets/{mcptoolargs." + "snippetname" + "}.json";
+
+    [McpServerTool, Description("Retrieves a snippet from storage.")]
+    public object GetSnippet(
+        string snippetContent
+    )
+    {
+        return snippetContent;
+    }
+
+    [McpServerTool, Description("Saves a snippet to storage.")]
+    public string SaveSnippet(
+            string name,
+            string snippet
+    )
+    {
+        return snippet;
+    }
 }
