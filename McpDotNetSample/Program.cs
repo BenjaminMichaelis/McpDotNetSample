@@ -1,13 +1,26 @@
-﻿namespace BenchmarkApp.Console;
+﻿using System.ComponentModel;
 
-public sealed class Program
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+
+using ModelContextProtocol.Server;
+
+var builder = Host.CreateApplicationBuilder(args);
+builder.Logging.AddConsole(consoleLogOptions =>
 {
-    public static void Main(string[] args)
-    {
-    }
+    // Configure all logs to go to stderr
+    consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
+});
+builder.Services
+    .AddMcpServer()
+    .WithStdioServerTransport()
+    .WithToolsFromAssembly();
+await builder.Build().RunAsync();
 
-    public int Method(int value)
-    {
-        return value + 1;
-    }
+[McpServerToolType]
+public static class EchoTool
+{
+    [McpServerTool, Description("Echoes the message back to the client.")]
+    public static string Echo(string message) => $"hello {message}";
 }

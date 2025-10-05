@@ -1,4 +1,4 @@
-namespace BenchmarkApp.Console.Tests;
+namespace McpDotNetSample.Tests;
 
 public class ProgramTests
 {
