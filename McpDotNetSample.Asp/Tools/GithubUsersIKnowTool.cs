@@ -9,15 +9,12 @@ namespace McpDotNetSample.Asp.Tools;
 [McpServerToolType]
 public static class GithubUsersIKnowTool
 {
-    // Service accessor that will be set during DI initialization
-    internal static IGithubUserRepository? Repository { get; set; }
-
     [McpServerTool, Description("Look up the Github username of someone in your organization based on their name.")]
-    public static string LookupGithubUsername(string name)
+    public static string LookupGithubUsername(IGithubUserRepository githubUserRepository, string name)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
-        
-        if (Repository is null)
+
+        if (githubUserRepository is null)
         {
             throw new InvalidOperationException("GitHub user repository is not configured.");
         }
@@ -37,8 +34,8 @@ public static class GithubUsersIKnowTool
         else if (names.Length == 1)
         {
             // Search by first name only
-            var matches = Repository.FindByFirstName(names[0]).ToList();
-            
+            var matches = githubUserRepository.FindByFirstName(names[0]).ToList();
+
             return matches.Count switch
             {
                 0 => $"No GitHub user found with first name '{names[0]}'.",
@@ -52,29 +49,29 @@ public static class GithubUsersIKnowTool
             string firstName = names[0];
             string lastName = names[^1]; // Last element
 
-            var username = Repository.FindByFullName(firstName, lastName);
-            
+            var username = githubUserRepository.FindByFullName(firstName, lastName);
+
             if (username is not null)
             {
                 return $"GitHub username for {firstName} {lastName}: {username}";
             }
-            
+
             // If not found by full name, try searching by first name
-            var firstNameMatches = Repository.FindByFirstName(firstName).ToList();
-            
+            var firstNameMatches = githubUserRepository.FindByFirstName(firstName).ToList();
+
             if (firstNameMatches.Count > 0)
             {
                 return $"No exact match for '{firstName} {lastName}'. Users with first name '{firstName}': {string.Join(", ", firstNameMatches)}";
             }
-            
+
             // Try searching by last name as a fallback
-            var lastNameMatches = Repository.FindByLastName(lastName).ToList();
-            
+            var lastNameMatches = githubUserRepository.FindByLastName(lastName).ToList();
+
             if (lastNameMatches.Count > 0)
             {
                 return $"No match for first name '{firstName}'. Users with last name '{lastName}': {string.Join(", ", lastNameMatches)}";
             }
-            
+
             return $"No GitHub user found matching '{name}'.";
         }
     }
