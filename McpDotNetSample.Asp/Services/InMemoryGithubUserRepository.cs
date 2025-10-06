@@ -26,7 +26,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
     // Dictionary mapping: (FirstName, LastName) -> GitHubUsername
     private readonly Dictionary<(string FirstName, string LastName), string> _users = new(new NameComparer())
     {
-        { ("John", "Doe"), "johndoe" },
+        { ("Kevin", "Bost"), "keboo" },
         { ("Jane", "Smith"), "janesmith" },
         { ("Bob", "Johnson"), "bobjohnson" },
         { ("Alice", "Williams"), "alicew" },
@@ -41,7 +41,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
     public IEnumerable<string> FindByFirstName(string firstName)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(firstName);
-        
+
         return _users
             .Where(kvp => kvp.Key.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase))
             .Select(kvp => kvp.Value)
@@ -51,7 +51,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
     public IEnumerable<string> FindByLastName(string lastName)
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(lastName);
-        
+
         return _users
             .Where(kvp => kvp.Key.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase))
             .Select(kvp => kvp.Value)
@@ -62,7 +62,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
     {
         ArgumentNullException.ThrowIfNullOrWhiteSpace(firstName);
         ArgumentNullException.ThrowIfNullOrWhiteSpace(lastName);
-        
+
         var key = (firstName, lastName);
         return _users.TryGetValue(key, out var username) ? username : null;
     }

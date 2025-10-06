@@ -19,12 +19,6 @@ public static class GithubUsersIKnowTool
             throw new InvalidOperationException("GitHub user repository is not configured.");
         }
 
-        // Determine if first and last names are present in name (space splits name).
-        // This is not required, but will determine how we search for the user.
-        // If only one name is present, we will search by first name only.
-        // If two names are present, we will search by first name, and if not found
-        // or multiple found, we will search by last name to narrow down the results.
-
         var names = name.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
         if (names.Length == 0)

@@ -3,34 +3,13 @@ using System.Text.Json;
 
 using ModelContextProtocol.Server;
 
-namespace McpDotNetSample;
+namespace McpDotNetSample.Tools;
 
 [McpServerToolType]
 public static class SnippetTool
 {
     // Root directory for snippet storage (temp folder to keep things ephemeral per-machine)
     private static readonly string SnippetRoot = Path.Combine(Path.GetTempPath(), "mcp_snippets");
-
-    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
-    {
-        WriteIndented = true
-    };
-
-    // Simple DTO / record for serialization
-    public sealed record Snippet(string Name, string Content, DateTimeOffset SavedAt);
-
-    private static string SanitizeFileName(string name)
-    {
-        // Replace invalid file name chars with '_'
-        return string.Join('_', name.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
-    }
-
-    private static string GetFilePath(string name) => Path.Combine(SnippetRoot, SanitizeFileName(name) + ".json");
-
-    private static void EnsureRoot()
-    {
-        Directory.CreateDirectory(SnippetRoot);
-    }
 
     [McpServerTool, Description("Retrieves a code snippet by name. Returns the snippet content.")]
     public static string GetSnippet(string name)
@@ -87,5 +66,27 @@ public static class SnippetTool
         {
             throw new FileNotFoundException($"Snippet '{name}' was not found.");
         }
+    }
+
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
+    {
+        WriteIndented = true
+    };
+
+    // Simple DTO / record for serialization
+    public sealed record Snippet(string Name, string Content, DateTimeOffset SavedAt);
+
+    private static string SanitizeFileName(string name)
+    {
+        // Replace invalid file name chars with '_'
+        return string.Join('_', name.Split(Path.GetInvalidFileNameChars(), StringSplitOptions.RemoveEmptyEntries));
+    }
+
+    private static string GetFilePath(string name) => Path.Combine(SnippetRoot, SanitizeFileName(name) + ".json");
+
+    private static void EnsureRoot()
+    {
+        Directory.CreateDirectory(SnippetRoot);
     }
 }

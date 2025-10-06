@@ -14,10 +14,6 @@
     <PackageReference Include="ModelContextProtocol" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Tools\" />
-  </ItemGroup>
-
   <!-- 
     For packaging as a dotnet global tool 
     https://learn.microsoft.com/dotnet/core/tools/global-tools-how-to-create
