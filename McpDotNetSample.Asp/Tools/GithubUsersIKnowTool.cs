@@ -12,7 +12,7 @@ public static class GithubUsersIKnowTool
     [McpServerTool, Description("Look up the Github username of someone in your organization based on their name.")]
     public static string LookupGithubUsername(IGithubUserRepository githubUserRepository, string name)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         if (githubUserRepository is null)
         {
@@ -61,12 +61,9 @@ public static class GithubUsersIKnowTool
             // Try searching by last name as a fallback
             var lastNameMatches = githubUserRepository.FindByLastName(lastName).ToList();
 
-            if (lastNameMatches.Count > 0)
-            {
-                return $"No match for first name '{firstName}'. Users with last name '{lastName}': {string.Join(", ", lastNameMatches)}";
-            }
-
-            return $"No GitHub user found matching '{name}'.";
+            return lastNameMatches.Count > 0
+                ? $"No match for first name '{firstName}'. Users with last name '{lastName}': {string.Join(", ", lastNameMatches)}"
+                : $"No GitHub user found matching '{name}'.";
         }
     }
 }

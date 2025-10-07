@@ -6,16 +6,15 @@ using Microsoft.Extensions.Logging;
 
 using ModelContextProtocol.Server;
 
-public class Program
+namespace McpDotNetSample;
+
+public static class Program
 {
     public static async Task Main(string[] args)
     {
         var builder = Host.CreateApplicationBuilder(args);
         builder.Logging.AddConsole(consoleLogOptions =>
-        {
-            // Configure all logs to go to stderr
-            consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace;
-        });
+            consoleLogOptions.LogToStandardErrorThreshold = LogLevel.Trace);
         builder.Services
             .AddMcpServer()
             .WithStdioServerTransport()
@@ -25,11 +24,11 @@ public class Program
 }
 
 [McpServerToolType]
-public class AddTool
+public static class AddTool
 {
     [McpServerTool(Name = "add"), Description("Adds two numbers.")]
-    public static string Add(int a, int b)
+    public static string Add(int left, int right)
     {
-        return $"The sum of {a} and {b} is {a + b}";
+        return $"The sum of {left} and {right} is {left + right}";
     }
 }

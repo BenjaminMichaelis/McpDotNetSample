@@ -6,15 +6,15 @@ using ModelContextProtocol.Server;
 namespace McpDotNetSample.Tools;
 
 [McpServerToolType]
-public static class SnippetTool
+public static class CodeSnippetTool
 {
     // Root directory for snippet storage (temp folder to keep things ephemeral per-machine)
     private static readonly string SnippetRoot = Path.Combine(Path.GetTempPath(), "mcp_snippets");
 
     [McpServerTool, Description("Retrieves a code snippet by name. Returns the snippet content.")]
-    public static string GetSnippet(string name)
+    public static string GetCodeSnippet(string name)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         EnsureRoot();
         string path = GetFilePath(name);
@@ -27,10 +27,10 @@ public static class SnippetTool
     }
 
     [McpServerTool, Description("Saves (creates or overwrites) a code snippet by name and returns metadata.")]
-    public static Snippet SaveSnippet(string name, string content)
+    public static Snippet SaveCodeSnippet(string name, string content)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(content);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(content);
 
         EnsureRoot();
         var path = GetFilePath(name);
@@ -43,7 +43,7 @@ public static class SnippetTool
     }
 
     [McpServerTool, Description("Lists available snippet names in the collection.")]
-    public static string[] ListSnippets()
+    public static string[] ListCodeSnippets()
     {
         EnsureRoot();
         var files = Directory.EnumerateFiles(SnippetRoot, "*.json", SearchOption.TopDirectoryOnly);
@@ -51,9 +51,9 @@ public static class SnippetTool
     }
 
     [McpServerTool, Description("Deletes a code snippet by name.")]
-    public static void DeleteSnippet(string name)
+    public static void DeleteCodeSnippet(string name)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
 
         EnsureRoot();
         var path = GetFilePath(name);

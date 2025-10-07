@@ -6,23 +6,6 @@ namespace McpDotNetSample.Asp.Services;
 /// </summary>
 public class InMemoryGithubUserRepository : IGithubUserRepository
 {
-    // Custom comparer for case-insensitive tuple comparison
-    private class NameComparer : IEqualityComparer<(string FirstName, string LastName)>
-    {
-        public bool Equals((string FirstName, string LastName) x, (string FirstName, string LastName) y)
-        {
-            return string.Equals(x.FirstName, y.FirstName, StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals(x.LastName, y.LastName, StringComparison.OrdinalIgnoreCase);
-        }
-
-        public int GetHashCode((string FirstName, string LastName) obj)
-        {
-            return HashCode.Combine(
-                obj.FirstName?.ToLowerInvariant(),
-                obj.LastName?.ToLowerInvariant());
-        }
-    }
-
     // Dictionary mapping: (FirstName, LastName) -> GitHubUsername
     private readonly Dictionary<(string FirstName, string LastName), string> _users = new(new NameComparer())
     {
@@ -40,7 +23,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
 
     public IEnumerable<string> FindByFirstName(string firstName)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(firstName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(firstName);
 
         return _users
             .Where(kvp => kvp.Key.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase))
@@ -50,7 +33,7 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
 
     public IEnumerable<string> FindByLastName(string lastName)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(lastName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(lastName);
 
         return _users
             .Where(kvp => kvp.Key.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase))
@@ -60,10 +43,27 @@ public class InMemoryGithubUserRepository : IGithubUserRepository
 
     public string? FindByFullName(string firstName, string lastName)
     {
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(firstName);
-        ArgumentNullException.ThrowIfNullOrWhiteSpace(lastName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(firstName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(lastName);
 
         var key = (firstName, lastName);
         return _users.TryGetValue(key, out var username) ? username : null;
+    }
+
+    // Custom comparer for case-insensitive tuple comparison
+    private class NameComparer : IEqualityComparer<(string FirstName, string LastName)>
+    {
+        public bool Equals((string FirstName, string LastName) x, (string FirstName, string LastName) y)
+        {
+            return string.Equals(x.FirstName, y.FirstName, StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(x.LastName, y.LastName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public int GetHashCode((string FirstName, string LastName) obj)
+        {
+            return HashCode.Combine(
+                obj.FirstName?.ToLowerInvariant(),
+                obj.LastName?.ToLowerInvariant());
+        }
     }
 }
